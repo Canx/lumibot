@@ -26,6 +26,7 @@ def get_price_data_from_polygon(
     timespan: str = "minute",
     has_paid_subscription: bool = False,
     quote_asset: Asset = None,
+    only_from_cache: bool = False
 ):
     """
     Queries Polygon.io for pricing data for the given asset and returns a DataFrame with the data. Data will be
@@ -67,6 +68,9 @@ def get_price_data_from_polygon(
         print(f"\nLoading pricing data for {asset} / {quote_asset} with '{timespan}' timespan from cache file...")
         df_feather = load_cache(cache_file)
         df_all = df_feather.copy()  # Make a copy so we can check the original later for differences
+
+        if only_from_cache:
+            return df_all
 
     # Check if we need to get more data
     missing_dates = get_missing_dates(df_all, asset, start, end)
